@@ -8,11 +8,12 @@ Booster Robotics SDK aims to provide a simple and easy-to-use interface for deve
 
 ## Installation
 ```bash
-sudo ./install.sh
+./install.sh
 ```
 
 ## Install python package for building python binding locally
 ```bash
+conda activate {YOUR_ENV}
 pip3 install pybind11
 pip3 install pybind11-stubgen
 ```
@@ -48,7 +49,7 @@ mkdir build
 cd build
 cmake .. -DBUILD_PYTHON_BINDING=on
 make
-sudo make install
+make install
 ```
 
 if pybind11-stubgen cannot be found even after pip install, export PATH
