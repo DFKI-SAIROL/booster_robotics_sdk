@@ -24,7 +24,7 @@ set(BOOSTER_SDK_LIBS
 )
 
 # link_libraries(booster_robotics_sdk.a fastrtps fastcdr libfoonathan_memory-0.7.3.a)
-nclude_directories(${BOOSTER_INSTALL_PATH}/include)
+include_directories(${BOOSTER_INSTALL_PATH}/include)
 
 add_executable(b1_loco_example_client example/high_level/b1_loco_example_client.cpp)
 target_link_libraries(b1_loco_example_client PRIVATE ${BOOSTER_SDK_LIBS})
