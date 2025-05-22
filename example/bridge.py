@@ -3,8 +3,11 @@ from booster_robotics_sdk_python import ChannelFactory, B1LowCmdPublisher, LowCm
 import sys, time, random
 import atexit
 from functools import partial
+import math
 
-SLEEP_TIME = 1
+SLEEP_TIME = 0.02  
+AMPLITUDE = 0.8    
+FREQUENCY = 0.3    
 
 
 
@@ -33,13 +36,23 @@ def main():
     channel_publisher.InitChannel()
 
     atexit.register(partial(on_exit, client))
+    start_time = time.time()
+
     while True:
+        current_time = time.time() - start_time
+        sin_value = math.sin(2 * math.pi * FREQUENCY * current_time)
+
         low_cmd = LowCmd()
         low_cmd.cmd_type = LowCmdType.PARALLEL
         low_cmd.motor_cmd = motor_cmds
         
         for i in range(B1JointCnt):
-            if   i== 3 :
+
+            if   i== 2 :
+                low_cmd.motor_cmd[i].q = sin_value * AMPLITUDE
+            elif i== 6:
+                low_cmd.motor_cmd[i].q = -sin_value * AMPLITUDE
+            elif i== 3 :
                 low_cmd.motor_cmd[i].q = -1.3
             elif i== 7:
                 low_cmd.motor_cmd[i].q =  1.3
