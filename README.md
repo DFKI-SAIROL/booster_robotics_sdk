@@ -14,8 +14,8 @@ Booster Robotics SDK aims to provide a simple and easy-to-use interface for deve
 ## Install python package for building python binding locally
 ```bash
 conda activate {YOUR_ENV}
-pip3 install pybind11
-pip3 install pybind11-stubgen
+conda install pybind11
+conda install pybind11-stubgen
 ```
 
 ## Build examples
