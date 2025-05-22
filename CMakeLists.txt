@@ -24,7 +24,7 @@ set(BOOSTER_SDK_LIBS
 )
 
 # link_libraries(booster_robotics_sdk.a fastrtps fastcdr libfoonathan_memory-0.7.3.a)
-include_directories(${BOOSTER_INSTALL_PATH}/include)
+nclude_directories(${BOOSTER_INSTALL_PATH}/include)
 
 add_executable(b1_loco_example_client example/high_level/b1_loco_example_client.cpp)
 target_link_libraries(b1_loco_example_client PRIVATE ${BOOSTER_SDK_LIBS})
@@ -70,9 +70,22 @@ if(BUILD_PYTHON_BINDING)
 	message(${pybind11_INCLUDE_DIRS})
 	
     include_directories(${Python3_INCLUDE_DIRS} ${pybind11_INCLUDE_DIRS})
-    
+
     python3_add_library(booster_robotics_sdk_python MODULE python/binding.cpp WITH_SOABI)
 
+    # --- ADD THESE RPATH LINES ---
+    # Define the RPATH for the installed library
+    # $ORIGIN means "look in the same directory as the module itself"
+    # ${BOOSTER_INSTALL_PATH}/lib is where your libfastrtps.so will be installed
+    set(CMAKE_INSTALL_RPATH "$ORIGIN;${BOOSTER_INSTALL_PATH}/lib")
+    set_property(TARGET booster_robotics_sdk_python PROPERTY INSTALL_RPATH "${CMAKE_INSTALL_RPATH}")
+    set_property(TARGET booster_robotics_sdk_python PROPERTY BUILD_RPATH "${CMAKE_INSTALL_RPATH}") # Also set for the build directory
+    set_property(TARGET booster_robotics_sdk_python PROPERTY BUILD_WITH_INSTALL_RPATH TRUE) # Use the install RPATH even in the build tree
+
+    # This is important to ensure RPATH is actually used by the linker
+    set_property(TARGET booster_robotics_sdk_python PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+    # --- END RPATH LINES ---
+    
     target_compile_definitions(booster_robotics_sdk_python PRIVATE VERSION_INFO=${PROJECT_VERSION})
     
     target_link_libraries(booster_robotics_sdk_python PRIVATE ${BOOSTER_SDK_LIBS})
